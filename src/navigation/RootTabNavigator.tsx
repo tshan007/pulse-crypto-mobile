@@ -28,6 +28,7 @@ function TabIcon({ glyph, focused }: { glyph: string; focused: boolean }) {
 export function RootTabNavigator() {
   return (
     <Tab.Navigator
+      initialRouteName="MarketsStack"
       screenOptions={{
         headerShown: false,
         tabBarStyle: { backgroundColor: theme.colors.background, borderTopColor: theme.palette.neutral[800] },

@@ -4,6 +4,7 @@ import { config } from "../config";
 import { useMarketStore } from "../store/marketStore";
 import { useTelemetryStore } from "../store/telemetryStore";
 import { ServerMessage } from "../types/market";
+import { wsDebug } from "../utils/wsDebug";
 
 /**
  * Owns the single WebSocket connection to the backend for the app's
@@ -47,24 +48,28 @@ export function useMarketSocket() {
       ws.onopen = () => {
         reconnectAttemptRef.current = 0;
         setSocketStatus("open");
+        wsDebug.open(config.wsUrl);
       };
 
       ws.onmessage = (event) => {
         useTelemetryStore.getState().recordMessage();
         try {
           const msg = JSON.parse(event.data) as ServerMessage;
+          wsDebug.message(msg);
           if (msg.type === "snapshot") applySnapshot(msg.data);
         } catch (err) {
-          console.error("[ws] failed to parse message", err);
+          wsDebug.parseError(err, String(event.data));
         }
       };
 
-      ws.onerror = () => {
+      ws.onerror = (event) => {
+        wsDebug.error((event as any)?.message ?? "unknown error");
         // "close" fires right after for RN's WebSocket, which drives
         // reconnection — nothing additional to do here.
       };
 
-      ws.onclose = () => {
+      ws.onclose = (event) => {
+        wsDebug.close(event.code, event.reason);
         setSocketStatus("closed");
         if (!closedByUsRef.current) scheduleReconnect();
       };

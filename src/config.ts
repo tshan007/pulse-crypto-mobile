@@ -20,4 +20,8 @@ export const config = {
   reconnectMaxDelayMs: 30000,
   // How long a price-change flash highlight stays visible.
   flashDurationMs: 600,
+  // Set EXPO_PUBLIC_DEBUG_WS=true to log every WS lifecycle event and
+  // message summary to the Metro/Expo terminal. Off by default since at a
+  // 100ms broadcast interval it would otherwise flood the console.
+  debugWs: process.env.EXPO_PUBLIC_DEBUG_WS === "true",
 };

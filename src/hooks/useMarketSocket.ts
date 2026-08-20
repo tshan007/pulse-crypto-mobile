@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { AppState, AppStateStatus } from "react-native";
 import { config } from "../config";
 import { useMarketStore } from "../store/marketStore";
+import { useTelemetryStore } from "../store/telemetryStore";
 import { ServerMessage } from "../types/market";
 
 /**
@@ -49,6 +50,7 @@ export function useMarketSocket() {
       };
 
       ws.onmessage = (event) => {
+        useTelemetryStore.getState().recordMessage();
         try {
           const msg = JSON.parse(event.data) as ServerMessage;
           if (msg.type === "snapshot") applySnapshot(msg.data);

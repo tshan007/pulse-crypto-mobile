@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import { FlatList, RefreshControl, StyleSheet, Text, TextInput, View } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { WatchlistRow } from "../components/WatchlistRow";
+import { ConnectionStatusBadge } from "../components/ConnectionStatusBadge";
 import { useMarketStore } from "../store/marketStore";
 import { usePairsMeta } from "../hooks/usePairsMeta";
 import { SUPPORTED_PAIRS } from "../constants";
@@ -41,7 +42,7 @@ export function WatchlistScreen({ navigation }: Props) {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>PulseCrypto</Text>
-        <SocketStatusBadge status={socketStatus} />
+        <ConnectionStatusBadge status={socketStatus} />
       </View>
 
       <TextInput
@@ -67,18 +68,6 @@ export function WatchlistScreen({ navigation }: Props) {
   );
 }
 
-function SocketStatusBadge({ status }: { status: string }) {
-  const label =
-    status === "open" ? "Live" : status === "reconnecting" ? "Reconnecting…" : status === "connecting" ? "Connecting…" : "Offline";
-  const color = status === "open" ? "#22c55e" : status === "closed" ? "#ef4444" : "#f59e0b";
-  return (
-    <View style={styles.badge}>
-      <View style={[styles.badgeDot, { backgroundColor: color }]} />
-      <Text style={styles.badgeText}>{label}</Text>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -96,24 +85,6 @@ const styles = StyleSheet.create({
     color: "#fafafa",
     fontSize: 22,
     fontWeight: "700",
-  },
-  badge: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    backgroundColor: "#18181b",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 999,
-  },
-  badgeDot: {
-    width: 7,
-    height: 7,
-    borderRadius: 4,
-  },
-  badgeText: {
-    color: "#d4d4d8",
-    fontSize: 12,
   },
   search: {
     marginHorizontal: 16,

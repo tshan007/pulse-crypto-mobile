@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "../theme";
 
 /**
@@ -10,10 +11,10 @@ import { theme } from "../theme";
  */
 export function TerminalPlaceholderScreen() {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
       <Text style={styles.title}>Terminal</Text>
       <Text style={styles.body}>Coming soon — deep order book ladder and market depth chart.</Text>
-    </View>
+    </SafeAreaView>
   );
 }
 

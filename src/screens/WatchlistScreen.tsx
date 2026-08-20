@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { FlatList, RefreshControl, StyleSheet, Text, TextInput, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { WatchlistRow } from "../components/WatchlistRow";
 import { ConnectionStatusBadge } from "../components/ConnectionStatusBadge";
@@ -39,7 +40,7 @@ export function WatchlistScreen({ navigation }: Props) {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
       <View style={styles.header}>
         <Text style={styles.title}>PulseCrypto</Text>
         <ConnectionStatusBadge status={socketStatus} />
@@ -64,7 +65,7 @@ export function WatchlistScreen({ navigation }: Props) {
         }
         ListEmptyComponent={<Text style={styles.empty}>No pairs match "{query}"</Text>}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 

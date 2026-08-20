@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useMarketStore } from "../store/marketStore";
 import { useFrameRate } from "../hooks/useFrameRate";
 import { useSocketMetrics } from "../hooks/useSocketMetrics";
@@ -33,7 +34,8 @@ export function TelemetrySettingsScreen() {
   const [adaptivePolling, setAdaptivePolling] = useState(false);
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
+      <ScrollView contentContainerStyle={styles.content}>
       <View style={styles.header}>
         <Text style={styles.title}>Telemetry & Settings</Text>
         <ConnectionStatusBadge status={socketStatus} />
@@ -123,6 +125,7 @@ export function TelemetrySettingsScreen() {
         subtitle="AsyncStorage — favourites only, ~1KB used"
       />
     </ScrollView>
+    </SafeAreaView>
   );
 }
 

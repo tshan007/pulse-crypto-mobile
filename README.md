@@ -2,6 +2,9 @@
 
 A React Native (Expo) app that visualises live market data from the PulseCrypto backend.
 
+> This is the mobile half of PulseCrypto. The backend lives in a companion repo,
+> **pulsecrypto-backend** — start it first (defaults to `localhost:8080`) before running this app.
+
 ## Setup
 
 ```bash
@@ -11,7 +14,7 @@ npm install
 
 ## Run
 
-Start the backend first (see `backend/README.md`), then:
+Start the backend first — it now lives in its own repo, [pulsecrypto-backend](../pulsecrypto-backend) (see its README for setup) — then:
 
 ```bash
 npx expo start
@@ -126,7 +129,7 @@ here. What *was* verified:
   pinned version was incompatible with the scaffolded RN version's internals and was
   removed, since the app doesn't use gesture-handler-dependent features).
 - The backend's WebSocket/REST behavior was separately verified live (see
-  `backend/README.md`), confirming the payload shapes this app's types/store assume.
+  the separate pulsecrypto-backend repo's README), confirming the payload shapes this app's types/store assume.
 
 A device/simulator screen recording is still needed as a deliverable per the assignment
 and should be captured by running `npx expo start` locally against the backend.

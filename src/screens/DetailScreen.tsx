@@ -2,12 +2,14 @@ import React, { useEffect, useRef } from "react";
 import {
   LayoutAnimation,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
   UIManager,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useMarketStore } from "../store/marketStore";
 import { FlashingPrice } from "../components/FlashingPrice";
@@ -28,10 +30,6 @@ export function DetailScreen({ route, navigation }: Props) {
   const meta = useMarketStore((s) => s.meta[pair]);
   const lastBidsRef = useRef<string>("");
 
-  useEffect(() => {
-    navigation.setOptions({ title: displayPairName(pair) });
-  }, [navigation, pair]);
-
   // Animate order book volume-bar changes smoothly, per spec, without
   // needing an Animated.Value per row — LayoutAnimation batches the visual
   // transition for the whole re-layout triggered by new bid/ask data.
@@ -44,18 +42,36 @@ export function DetailScreen({ route, navigation }: Props) {
     lastBidsRef.current = signature;
   }, [pairState]);
 
-  if (!pairState) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.loading}>Waiting for data…</Text>
+  return (
+    <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
+      <View style={styles.header}>
+        <Pressable onPress={() => navigation.goBack()} hitSlop={12} style={styles.backButton}>
+          <Text style={styles.backArrow}>←</Text>
+        </Pressable>
+        <Text style={styles.headerTitle}>{displayPairName(pair)}</Text>
+        <View style={styles.backButton} />
       </View>
-    );
-  }
 
+      {!pairState ? (
+        <Text style={styles.loading}>Waiting for data…</Text>
+      ) : (
+        <DetailContent pairState={pairState} meta={meta} />
+      )}
+    </SafeAreaView>
+  );
+}
+
+function DetailContent({
+  pairState,
+  meta,
+}: {
+  pairState: NonNullable<ReturnType<typeof useMarketStore.getState>["pairs"][string]>;
+  meta: ReturnType<typeof useMarketStore.getState>["meta"][string] | undefined;
+}) {
   const { price, spread, buyPressure, sellPressure, bids, asks, connected, timestamp } = pairState;
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
       <View style={styles.priceRow}>
         <FlashingPrice value={price} formatted={formatPrice(price)} style={styles.priceText} />
         <View style={styles.statusRow}>
@@ -114,6 +130,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#09090b",
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 8,
+    paddingVertical: 10,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: "#27272a",
+  },
+  backButton: {
+    width: 40,
+    alignItems: "flex-start",
+    justifyContent: "center",
+  },
+  backArrow: {
+    color: "#fafafa",
+    fontSize: 22,
+  },
+  headerTitle: {
+    color: "#fafafa",
+    fontSize: 17,
+    fontWeight: "700",
+  },
+  scroll: {
+    flex: 1,
   },
   content: {
     padding: 16,

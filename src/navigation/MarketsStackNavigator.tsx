@@ -16,7 +16,7 @@ export function MarketsStackNavigator() {
       }}
     >
       <Stack.Screen name="Watchlist" component={WatchlistScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Detail" component={DetailScreen} />
+      <Stack.Screen name="Detail" component={DetailScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }

@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { BookLevel } from "../types/market";
 import { formatPrice, formatQuantity } from "../utils/format";
+import { theme } from "../theme";
 
 interface OrderBookTableProps {
   bids: BookLevel[];
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   columnHeader: {
-    color: "#a1a1aa",
+    color: theme.colors.textDim,
     fontSize: 12,
     marginBottom: 6,
     fontWeight: "600",
@@ -101,24 +102,24 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   bidBar: {
-    backgroundColor: "rgba(34,197,94,0.15)",
+    backgroundColor: theme.colors.successWash,
   },
   askBar: {
-    backgroundColor: "rgba(239,68,68,0.15)",
+    backgroundColor: theme.colors.dangerWash,
   },
   priceText: {
     fontSize: 13,
     fontVariant: ["tabular-nums"],
   },
   bidText: {
-    color: "#4ade80",
+    color: theme.colors.successBright,
   },
   askText: {
-    color: "#f87171",
+    color: theme.colors.dangerBright,
   },
   qtyText: {
     fontSize: 13,
-    color: "#d4d4d8",
+    color: theme.colors.textDefault,
     fontVariant: ["tabular-nums"],
   },
 });

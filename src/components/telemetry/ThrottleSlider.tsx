@@ -8,13 +8,24 @@ interface ThrottleSliderProps {
   onValueChange: (value: number) => void;
   min?: number;
   max?: number;
+  disabled?: boolean;
 }
 
-export function ThrottleSlider({ value, onValueChange, min = 10, max = 1000 }: ThrottleSliderProps) {
+export const ThrottleSlider = React.memo(function ThrottleSlider({
+  value,
+  onValueChange,
+  min = 10,
+  max = 1000,
+  disabled = false,
+}: ThrottleSliderProps) {
   return (
     <View>
       <View style={styles.header}>
         <Text style={styles.label}>Update Frequency</Text>
+        {/* value can exceed `max` while adaptive polling is background
+            (up to 2000ms) — the label still shows it correctly even though
+            the thumb visually pins at the max position; harmless since
+            `disabled` blocks interaction anyway. */}
         <Text style={styles.value}>{value}ms</Text>
       </View>
       <Slider
@@ -23,6 +34,7 @@ export function ThrottleSlider({ value, onValueChange, min = 10, max = 1000 }: T
         step={10}
         value={value}
         onValueChange={onValueChange}
+        disabled={disabled}
         minimumTrackTintColor={theme.colors.positive}
         maximumTrackTintColor={theme.palette.neutral[700]}
         thumbTintColor={theme.colors.positive}
@@ -34,7 +46,7 @@ export function ThrottleSlider({ value, onValueChange, min = 10, max = 1000 }: T
       </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   header: {

@@ -1,5 +1,6 @@
-// Mirrors the backend's default PAIRS env var. In a larger system this
-// would come from the server (e.g. derived from the first /pairs/meta
-// response), but a fixed, known set keeps the watchlist populated
-// immediately on cold start, before the first REST/WS response arrives.
+// Cold-start fallback only. The authoritative list comes from GET /pairs
+// (see src/hooks/usePairs.ts), which overwrites marketStore's
+// supportedPairs once it resolves. This mirrors the backend's default
+// PAIRS env var so the watchlist has something to render immediately,
+// before the first REST response arrives.
 export const SUPPORTED_PAIRS = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "DOGEUSDT", "XRPUSDT"];

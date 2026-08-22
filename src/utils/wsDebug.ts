@@ -1,5 +1,5 @@
 import { config } from "../config";
-import { PairState, ServerMessage } from "../types/market";
+import { ClientMessage, PairState, ServerMessage } from "../types/market";
 
 /**
  * Compact, human-scannable log lines for WS traffic — deliberately not a
@@ -34,6 +34,11 @@ export const wsDebug = {
       .map((p: PairState) => `${p.pair}=${p.price ?? "—"}${p.connected ? "" : "(offline)"}`)
       .join(" ");
     console.log(`[ws] ◆ snapshot (${msg.data.length}) ${summary}`);
+  },
+
+  configureSent(msg: ClientMessage) {
+    if (!config.debugWs) return;
+    console.log(`[ws] ▶ configure format=${msg.format ?? "(unchanged)"} intervalMs=${msg.intervalMs ?? "(unchanged)"}`);
   },
 
   parseError(err: unknown, raw: string) {

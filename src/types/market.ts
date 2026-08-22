@@ -15,7 +15,6 @@ export interface PairState {
 
 export interface PairMeta {
   pair: string;
-  displayName: string;
   tradingStatus: "TRADING" | "BREAK" | "UNKNOWN";
   high24h: number | null;
   low24h: number | null;
@@ -27,3 +26,15 @@ export type ServerMessage =
   | { type: "connection"; pair: string; connected: boolean };
 
 export type SocketStatus = "connecting" | "open" | "closed" | "reconnecting";
+
+export type WireFormat = "json" | "msgpack";
+
+// Outbound WebSocket control message. Sent at any point after connecting to
+// change our own broadcast cadence and/or encoding without reconnecting.
+// Always sent as JSON regardless of the negotiated data format — this
+// channel is low-frequency and stays simple to debug.
+export type ClientMessage = {
+  type: "configure";
+  intervalMs?: number;
+  format?: WireFormat;
+};

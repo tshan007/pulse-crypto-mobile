@@ -11,10 +11,13 @@ const DEFAULT_HOST = Platform.select({
 
 const HOST = process.env.EXPO_PUBLIC_BACKEND_HOST ?? DEFAULT_HOST;
 const PORT = process.env.EXPO_PUBLIC_BACKEND_PORT ?? "8080";
+// Set EXPO_PUBLIC_BACKEND_SECURE=true for any backend served over TLS (uat/prd) —
+// local dev's plain-HTTP backend leaves this unset.
+const SECURE = process.env.EXPO_PUBLIC_BACKEND_SECURE === "true";
 
 export const config = {
-  wsUrl: `ws://${HOST}:${PORT}/ws`,
-  restBaseUrl: `http://${HOST}:${PORT}`,
+  wsUrl: `${SECURE ? "wss" : "ws"}://${HOST}:${PORT}/ws`,
+  restBaseUrl: `${SECURE ? "https" : "http"}://${HOST}:${PORT}`,
   // Reconnect backoff schedule for the WS client, mirrors the backend's.
   reconnectBaseDelayMs: 1000,
   reconnectMaxDelayMs: 30000,

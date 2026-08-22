@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { PairMeta, PairState, SocketStatus } from "../types/market";
 import { saveFavourites } from "./favouritesStorage";
+import { SUPPORTED_PAIRS } from "../constants";
 
 interface MarketStoreState {
   pairs: Record<string, PairState>;
@@ -8,10 +9,15 @@ interface MarketStoreState {
   socketStatus: SocketStatus;
   favourites: Record<string, true>;
   favouritesHydrated: boolean;
+  // Known pair symbols, e.g. "BTCUSDT". Seeded from the SUPPORTED_PAIRS
+  // fallback so the watchlist has something to render on cold start, then
+  // replaced with the backend's actual set once GET /pairs resolves.
+  supportedPairs: string[];
 
   applySnapshot: (data: PairState[]) => void;
   setSocketStatus: (status: SocketStatus) => void;
   setMeta: (meta: PairMeta[]) => void;
+  setSupportedPairs: (pairs: string[]) => void;
   toggleFavourite: (pair: string) => void;
   hydrateFavourites: (pairs: string[]) => void;
 }
@@ -33,6 +39,7 @@ export const useMarketStore = create<MarketStoreState>((set, get) => ({
   socketStatus: "connecting",
   favourites: {},
   favouritesHydrated: false,
+  supportedPairs: SUPPORTED_PAIRS,
 
   applySnapshot: (data) => {
     const current = get().pairs;
@@ -68,6 +75,8 @@ export const useMarketStore = create<MarketStoreState>((set, get) => ({
     for (const m of metaList) meta[m.pair] = m;
     set({ meta });
   },
+
+  setSupportedPairs: (pairs) => set({ supportedPairs: pairs }),
 
   toggleFavourite: (pair) => {
     const favourites = { ...get().favourites };

@@ -18,7 +18,7 @@ export const ConnectionStatusBadge = React.memo(function ConnectionStatusBadge({
       ? "Connecting…"
       : "Offline";
   const color =
-    status === "open" ? theme.colors.positive : status === "closed" ? theme.colors.negative : "#f59e0b";
+    status === "open" ? theme.colors.positive : status === "closed" ? theme.colors.negative : theme.colors.warning;
 
   return (
     <View style={styles.badge}>

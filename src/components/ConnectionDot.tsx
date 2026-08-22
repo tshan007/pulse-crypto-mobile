@@ -1,5 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
+import { theme } from "../theme";
 
 interface ConnectionDotProps {
   connected: boolean;
@@ -16,9 +17,9 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   connected: {
-    backgroundColor: "#22c55e",
+    backgroundColor: theme.colors.success,
   },
   disconnected: {
-    backgroundColor: "#71717a",
+    backgroundColor: theme.colors.textFaint,
   },
 });

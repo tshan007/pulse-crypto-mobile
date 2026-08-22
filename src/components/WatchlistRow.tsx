@@ -4,6 +4,7 @@ import { useMarketStore } from "../store/marketStore";
 import { FlashingPrice } from "./FlashingPrice";
 import { ConnectionDot } from "./ConnectionDot";
 import { displayPairName, formatPercent, formatPrice } from "../utils/format";
+import { theme } from "../theme";
 
 interface WatchlistRowProps {
   pair: string;
@@ -62,18 +63,18 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 16,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: "#27272a",
+    borderBottomColor: theme.colors.divider,
   },
   star: {
     width: 28,
     alignItems: "center",
   },
   starActive: {
-    color: "#facc15",
+    color: theme.colors.favourite,
     fontSize: 18,
   },
   starInactive: {
-    color: "#52525b",
+    color: theme.colors.textFaintest,
     fontSize: 18,
   },
   pairColumn: {
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   pairName: {
-    color: "#fafafa",
+    color: theme.colors.textStrong,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -92,14 +93,14 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   statusText: {
-    color: "#a1a1aa",
+    color: theme.colors.textDim,
     fontSize: 12,
   },
   priceColumn: {
     alignItems: "flex-end",
   },
   priceText: {
-    color: "#fafafa",
+    color: theme.colors.textStrong,
     fontSize: 16,
     fontWeight: "600",
     paddingHorizontal: 4,
@@ -110,12 +111,12 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   positive: {
-    color: "#22c55e",
+    color: theme.colors.success,
   },
   negative: {
-    color: "#ef4444",
+    color: theme.colors.danger,
   },
   neutral: {
-    color: "#a1a1aa",
+    color: theme.colors.textDim,
   },
 });

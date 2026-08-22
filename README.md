@@ -17,22 +17,47 @@ npm install
 Start the backend first — it now lives in its own repo, [pulsecrypto-backend](../pulsecrypto-backend) (see its README for setup) — then:
 
 ```bash
-npx expo start
+npm start          # local dev (same as npm run start:dev)
+npm run start:uat  # against the UAT backend
+npm run start:prd  # against the production backend
 ```
+
+`npm run android`/`android:uat`/`android:prd` and `ios`/`ios:uat`/`ios:prd` work the same
+way for `expo run:android`/`expo run:ios` — plain `android`/`ios` default to `:dev`.
 
 Press `i` for iOS simulator, `a` for Android emulator, or scan the QR code with Expo Go
 on a physical device.
 
-### Pointing at the backend
+### Environments
 
-By default the app connects to `localhost:8080`, with an automatic override to `10.0.2.2`
-for Android emulators (which can't reach the host machine via `localhost`). To point at a
-different host — e.g. a physical device on the same network, or a deployed backend —
-set:
+Each target has its own env file — `.env.development`, `.env.uat`, `.env.production` —
+loaded via `dotenv-cli`'s cascade mode (`dotenv -c <environment>`, see `package.json`),
+which layers `.env.<environment>.local` → `.env.local` → `.env.<environment>` → `.env`
+(first match for a given variable wins). Only values that genuinely differ by environment
+live there: backend host/port, whether the backend is served over TLS
+(`EXPO_PUBLIC_BACKEND_SECURE`), and the debug-logging default (`EXPO_PUBLIC_DEBUG_WS`).
+Internal tuning constants (reconnect backoff, flash animation duration) stay as plain
+constants in `src/config.ts` — they're the same in every environment, so an env var would
+just be indirection without a reason to vary.
+
+`.env.development` deliberately leaves `EXPO_PUBLIC_BACKEND_HOST`/`PORT` unset: `src/config.ts`
+already has a smart per-platform default (`10.0.2.2` for Android emulator, `localhost`
+everywhere else) that a static dev value would only override incorrectly for one platform
+or the other. `.env.uat`/`.env.production` currently hold placeholder hostnames —
+replace them with the real deployed backend URLs before using those scripts for anything
+but testing this setup locally.
+
+To override any value ad hoc (e.g. a physical device on your LAN) without touching the env
+files, set it directly — an already-exported shell variable always wins over the loaded
+`.env` file:
 
 ```bash
-EXPO_PUBLIC_BACKEND_HOST=192.168.1.42 EXPO_PUBLIC_BACKEND_PORT=8080 npx expo start
+EXPO_PUBLIC_BACKEND_HOST=192.168.1.42 EXPO_PUBLIC_BACKEND_PORT=8080 npm run start:dev
 ```
+
+Personal per-environment overrides can also go in a gitignored `.env.<environment>.local`
+file (e.g. `.env.development.local`) — the cascade picks it up automatically, no script
+changes needed, and it never gets committed (see `.gitignore`).
 
 ## Architecture
 
@@ -93,6 +118,20 @@ attempt when the app returns to the foreground — backgrounded sockets are freq
 dropped silently by the OS, so relying on `onclose` alone can leave the app looking
 "connected" when it isn't. The watchlist always shows the last-known data plus a status
 badge (`Live` / `Connecting…` / `Reconnecting…` / `Offline`), never a blank screen.
+
+**The socket is no longer receive-only.** `useMarketSocket` also sends a `{"type":
+"configure", intervalMs?, format?}` control message over the same live connection — once
+on open/reconnect, and again (debounced) whenever a Telemetry & Settings toggle or the
+Update Frequency slider changes — to pick its own broadcast cadence and JSON/msgpack
+encoding without ever tearing down the socket. Incoming frames are decoded based on
+`event.data`'s runtime type (`string` → JSON, `ArrayBuffer` → msgpack via `@msgpack/msgpack`,
+a pure-JS library that needs no native linking under managed Expo).
+
+**One `requestAnimationFrame` sampler, not two.** `useFrameRate`'s FPS sampling is called
+once, inside `useMarketSocket` (needed there to drive the adaptive-polling calculation),
+and mirrored into `telemetryStore`. `TelemetrySettingsScreen` reads `fps` from the store
+instead of calling `useFrameRate()` itself — the same "compute once, store, read via
+selector" pattern the store already uses for `messagesPerSecond`.
 
 **Pull-to-refresh only touches `/pairs/meta`.** `usePairsMeta`'s `refresh()` is a plain
 REST call, entirely independent of the WebSocket connection — pulling to refresh cannot

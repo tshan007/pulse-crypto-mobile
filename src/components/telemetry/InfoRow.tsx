@@ -16,7 +16,7 @@ interface InfoRowProps {
  * screen's header comment for why (no reliable RN API for GPU pipeline
  * status, JS heap memory, or true network latency without a native module).
  */
-export function InfoRow({ icon, iconBackground, iconColor, title, subtitle }: InfoRowProps) {
+export const InfoRow = React.memo(function InfoRow({ icon, iconBackground, iconColor, title, subtitle }: InfoRowProps) {
   return (
     <View style={styles.row}>
       <View style={[styles.iconBox, { backgroundColor: iconBackground }]}>
@@ -28,7 +28,7 @@ export function InfoRow({ icon, iconBackground, iconColor, title, subtitle }: In
       </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   row: {

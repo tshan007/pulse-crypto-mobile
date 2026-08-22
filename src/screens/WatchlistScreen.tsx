@@ -6,9 +6,9 @@ import { WatchlistRow } from "../components/WatchlistRow";
 import { ConnectionStatusBadge } from "../components/ConnectionStatusBadge";
 import { useMarketStore } from "../store/marketStore";
 import { usePairsMeta } from "../hooks/usePairsMeta";
-import { SUPPORTED_PAIRS } from "../constants";
 import { displayPairName } from "../utils/format";
 import { RootStackParamList } from "../navigation/types";
+import { theme } from "../theme";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Watchlist">;
 
@@ -16,15 +16,16 @@ export function WatchlistScreen({ navigation }: Props) {
   const [query, setQuery] = useState("");
   const favourites = useMarketStore((s) => s.favourites);
   const socketStatus = useMarketStore((s) => s.socketStatus);
+  const supportedPairs = useMarketStore((s) => s.supportedPairs);
   const { refreshing, refresh } = usePairsMeta();
 
   const filteredPairs = useMemo(() => {
     const q = query.trim().toLowerCase();
     const matches = q
-      ? SUPPORTED_PAIRS.filter(
+      ? supportedPairs.filter(
           (p) => p.toLowerCase().includes(q) || displayPairName(p).toLowerCase().includes(q)
         )
-      : SUPPORTED_PAIRS;
+      : supportedPairs;
 
     // Favourites first, stable order otherwise.
     return [...matches].sort((a, b) => {
@@ -32,7 +33,7 @@ export function WatchlistScreen({ navigation }: Props) {
       const favB = favourites[b] ? 1 : 0;
       return favB - favA;
     });
-  }, [query, favourites]);
+  }, [query, favourites, supportedPairs]);
 
   const handleOpenDetail = useCallback(
     (pair: string) => navigation.navigate("Detail", { pair }),
@@ -50,7 +51,7 @@ export function WatchlistScreen({ navigation }: Props) {
         value={query}
         onChangeText={setQuery}
         placeholder="Search..."
-        placeholderTextColor="#71717a"
+        placeholderTextColor={theme.colors.textFaint}
         style={styles.search}
         autoCapitalize="none"
         autoCorrect={false}
@@ -61,7 +62,7 @@ export function WatchlistScreen({ navigation }: Props) {
         keyExtractor={(item) => item}
         renderItem={({ item }) => <WatchlistRow pair={item} onPress={handleOpenDetail} />}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor="#fafafa" />
+          <RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor={theme.colors.textStrong} />
         }
         ListEmptyComponent={<Text style={styles.empty}>No pairs match "{query}"</Text>}
       />
@@ -72,7 +73,7 @@ export function WatchlistScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#09090b",
+    backgroundColor: theme.colors.screenBackground,
   },
   header: {
     flexDirection: "row",
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
   title: {
-    color: "#fafafa",
+    color: theme.colors.textStrong,
     fontSize: 22,
     fontWeight: "700",
   },
@@ -92,13 +93,13 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     paddingHorizontal: 14,
     paddingVertical: 10,
-    backgroundColor: "#18181b",
+    backgroundColor: theme.colors.cardBackground,
     borderRadius: 10,
-    color: "#fafafa",
+    color: theme.colors.textStrong,
     fontSize: 15,
   },
   empty: {
-    color: "#71717a",
+    color: theme.colors.textFaint,
     textAlign: "center",
     marginTop: 40,
   },

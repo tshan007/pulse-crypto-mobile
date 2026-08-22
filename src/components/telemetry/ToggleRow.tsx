@@ -9,7 +9,7 @@ interface ToggleRowProps {
   note?: string;
 }
 
-export function ToggleRow({ label, value, onValueChange, note }: ToggleRowProps) {
+export const ToggleRow = React.memo(function ToggleRow({ label, value, onValueChange, note }: ToggleRowProps) {
   return (
     <View style={styles.row}>
       <View style={styles.labelColumn}>
@@ -20,11 +20,11 @@ export function ToggleRow({ label, value, onValueChange, note }: ToggleRowProps)
         value={value}
         onValueChange={onValueChange}
         trackColor={{ false: theme.palette.neutral[700], true: theme.colors.positive }}
-        thumbColor="#fafafa"
+        thumbColor={theme.colors.textPrimary}
       />
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   row: {

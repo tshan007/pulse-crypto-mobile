@@ -18,7 +18,14 @@ interface RingGaugeProps {
  * shape redrawn on state change, not something that benefits from a raw
  * GPU pipeline. See screen-level notes for why GLView was ruled out here.
  */
-export function RingGauge({ value, maxValue, label, unit, size = 160, color = theme.colors.positive }: RingGaugeProps) {
+export const RingGauge = React.memo(function RingGauge({
+  value,
+  maxValue,
+  label,
+  unit,
+  size = 160,
+  color = theme.colors.positive,
+}: RingGaugeProps) {
   const strokeWidth = 10;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -58,7 +65,7 @@ export function RingGauge({ value, maxValue, label, unit, size = 160, color = th
       <Text style={styles.label}>{label}</Text>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {

@@ -5,6 +5,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { RootTabNavigator } from "./src/navigation/RootTabNavigator";
 import { useMarketSocket } from "./src/hooks/useMarketSocket";
 import { useFavouritesHydration } from "./src/hooks/useFavouritesHydration";
+import { usePairs } from "./src/hooks/usePairs";
 
 const navTheme = {
   ...DarkTheme,
@@ -22,6 +23,8 @@ export default function App() {
   useMarketSocket();
   // Restore favourites from disk on cold start.
   useFavouritesHydration();
+  // Fetch the supported pair list from the backend on cold start.
+  usePairs();
 
   return (
     <SafeAreaProvider>

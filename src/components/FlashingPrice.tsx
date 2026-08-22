@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Animated, StyleSheet, TextStyle } from "react-native";
 import { config } from "../config";
+import { theme } from "../theme";
 
 interface FlashingPriceProps {
   value: number | null;
@@ -38,8 +39,8 @@ export const FlashingPrice = React.memo(function FlashingPrice({ value, formatte
   const backgroundColor = flashAnim.interpolate({
     inputRange: [0, 1],
     outputRange: [
-      "rgba(0,0,0,0)",
-      directionRef.current === "up" ? "rgba(34,197,94,0.35)" : "rgba(239,68,68,0.35)",
+      "transparent",
+      directionRef.current === "up" ? theme.colors.successOverlay : theme.colors.dangerOverlay,
     ],
   });
 

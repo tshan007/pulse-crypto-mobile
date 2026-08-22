@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import Svg, { Polyline } from "react-native-svg";
+import { theme } from "../../theme";
 
 interface SparklineProps {
   data: number[];
@@ -9,7 +10,12 @@ interface SparklineProps {
 }
 
 /** Simple line sparkline. Data source is the caller's responsibility. */
-export function Sparkline({ data, width = 260, height = 60, color = "#f87171" }: SparklineProps) {
+export const Sparkline = React.memo(function Sparkline({
+  data,
+  width = 260,
+  height = 60,
+  color = theme.colors.negative,
+}: SparklineProps) {
   const points = useMemo(() => {
     if (data.length < 2) return "";
     const min = Math.min(...data);
@@ -29,4 +35,4 @@ export function Sparkline({ data, width = 260, height = 60, color = "#f87171" }:
       <Polyline points={points} fill="none" stroke={color} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
     </Svg>
   );
-}
+});

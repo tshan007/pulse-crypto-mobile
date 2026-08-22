@@ -5,6 +5,29 @@ A React Native (Expo) app that visualises live market data from the PulseCrypto 
 > This is the mobile half of PulseCrypto. The backend lives in a companion repo,
 > **pulsecrypto-backend** — start it first (defaults to `localhost:8080`) before running this app.
 
+## Prerequisites
+
+- **Node.js 20+** and npm.
+- **The backend running** — see the note above; without it the app has nothing to connect to.
+- **To run on Android:**
+  - [Android Studio](https://developer.android.com/studio) installed, with at least one AVD created via its Device Manager (Tools → Device Manager → Create Device).
+  - `ANDROID_HOME` (and `ANDROID_SDK_ROOT`) set to your SDK location — typically
+    `%LOCALAPPDATA%\Android\Sdk` on Windows, `~/Library/Android/sdk` on macOS — with its
+    `platform-tools` and `emulator` folders on your `PATH`. This is easy to miss even with
+    Android Studio and AVDs installed: without it, `expo run:android` (and pressing `a` from
+    `npm start`) fails with `No Android connected device found, and no emulators could be
+    started automatically`, even though the emulator itself is fine.
+  - A JDK (17+) with `JAVA_HOME` set — Android Studio bundles one under its own install dir,
+    or install a JDK separately.
+  - Env var changes only apply to processes started *after* you set them — fully restart your
+    terminal (and VSCode, if you set them while it was already open) before retrying.
+- **To run on iOS:** macOS only — Xcode and CocoaPods are required to build the native
+  project. The `ios`/`ios:*` npm scripts detect a non-macOS host and fail fast with a clear
+  message instead of a deep Xcode/CocoaPods error.
+- **No native build at all:** scan the QR code shown by `npm start` with the **Expo Go** app
+  on a physical device — this skips the Android/iOS SDK requirements above entirely, at the
+  cost of not testing the actual native build.
+
 ## Setup
 
 ```bash

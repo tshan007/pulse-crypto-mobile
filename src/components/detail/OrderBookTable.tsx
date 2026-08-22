@@ -1,8 +1,8 @@
 import React, { useMemo } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { BookLevel } from "../types/market";
-import { formatPrice, formatQuantity } from "../utils/format";
-import { theme } from "../theme";
+import { BookLevel } from "../../types/market";
+import { formatPrice, formatQuantity } from "../../utils/format";
+import { theme } from "../../theme";
 
 interface OrderBookTableProps {
   bids: BookLevel[];

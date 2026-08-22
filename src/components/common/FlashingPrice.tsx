@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Animated, StyleSheet, TextStyle } from "react-native";
-import { config } from "../config";
-import { theme } from "../theme";
+import { config } from "../../config";
+import { theme } from "../../theme";
 
 interface FlashingPriceProps {
   value: number | null;

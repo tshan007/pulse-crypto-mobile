@@ -5,7 +5,7 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useMarketStore } from "../store/marketStore";
 import { displayPairName } from "../utils/format";
 import { RootStackParamList } from "../navigation/types";
-import { DetailContent } from "../components/DetailContent";
+import { DetailContent } from "../components/detail/DetailContent";
 import { theme } from "../theme";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Detail">;

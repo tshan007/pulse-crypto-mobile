@@ -28,16 +28,24 @@
     "start:dev": "dotenv -c development -- expo start",
     "start:uat": "dotenv -c uat -- expo start",
     "start:prd": "dotenv -c production -- expo start",
+    "start:debug": "dotenv -c debug -- expo start",
     "android": "npm run android:dev",
     "android:dev": "dotenv -c development -- npx expo run:android",
     "android:uat": "dotenv -c uat -- npx expo run:android",
     "android:prd": "dotenv -c production -- npx expo run:android",
+    "android:debug": "dotenv -c debug -- npx expo run:android",
     "ios": "npm run ios:dev",
+    "preios:dev": "node scripts/check-macos.js",
     "ios:dev": "dotenv -c development -- npx expo run:ios",
+    "preios:uat": "node scripts/check-macos.js",
     "ios:uat": "dotenv -c uat -- npx expo run:ios",
+    "preios:prd": "node scripts/check-macos.js",
     "ios:prd": "dotenv -c production -- npx expo run:ios",
+    "preios:debug": "node scripts/check-macos.js",
+    "ios:debug": "dotenv -c debug -- npx expo run:ios",
     "web": "npm run web:dev",
-    "web:dev": "dotenv -c development -- npx expo start --web"
+    "web:dev": "dotenv -c development -- npx expo start --web",
+    "web:debug": "dotenv -c debug -- npx expo start --web"
   },
   "private": true
 }

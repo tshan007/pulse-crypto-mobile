@@ -4,13 +4,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useMarketStore } from "../store/marketStore";
 import { useTelemetryStore } from "../store/telemetryStore";
 import { useSocketMetrics } from "../hooks/useSocketMetrics";
-import { computeAdaptiveIntervalMs } from "../utils/adaptivePolling";
-import { ConnectionStatusBadge } from "../components/ConnectionStatusBadge";
+import { ConnectionStatusBadge } from "../components/common/ConnectionStatusBadge";
 import { RingGauge } from "../components/telemetry/RingGauge";
 import { MetricCard, SectionEyebrow } from "../components/telemetry/MetricCard";
 import { Sparkline } from "../components/telemetry/Sparkline";
-import { ThrottleSlider } from "../components/telemetry/ThrottleSlider";
-import { ToggleRow } from "../components/telemetry/ToggleRow";
 import { InfoRow } from "../components/telemetry/InfoRow";
 import { theme } from "../theme";
 
@@ -21,64 +18,21 @@ import { theme } from "../theme";
 // module (or a dev-only JSC-specific check) is deliberately added.
 const PLACEHOLDER_MEMORY_SERIES = [98, 102, 101, 108, 112, 110, 118, 124, 121, 130, 128, 140];
 
-export function TelemetrySettingsScreen() {
+export function TelemetryScreen() {
   const socketStatus = useMarketStore((s) => s.socketStatus);
   const messagesPerSecond = useSocketMetrics();
-
   const fps = useTelemetryStore((s) => s.fps);
-  const appState = useTelemetryStore((s) => s.appState);
-  const updateIntervalMs = useTelemetryStore((s) => s.updateIntervalMs);
-  const setUpdateIntervalMs = useTelemetryStore((s) => s.setUpdateIntervalMs);
-  const compressionEnabled = useTelemetryStore((s) => s.compressionEnabled);
-  const setCompressionEnabled = useTelemetryStore((s) => s.setCompressionEnabled);
-  const adaptivePolling = useTelemetryStore((s) => s.adaptivePolling);
-  const setAdaptivePolling = useTelemetryStore((s) => s.setAdaptivePolling);
-
-  // Actual cadence in effect right now: the manual slider value, or — when
-  // adaptive polling is on — a value computed from live FPS/foreground
-  // state. useMarketSocket sends this same computation to the backend.
-  const effectiveIntervalMs = adaptivePolling
-    ? computeAdaptiveIntervalMs(fps, appState)
-    : updateIntervalMs;
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
-          <Text style={styles.title}>Telemetry & Settings</Text>
+          <Text style={styles.title}>Telemetry</Text>
           <ConnectionStatusBadge status={socketStatus} />
         </View>
-        <Text style={styles.subtitle}>Real-time performance monitoring and data ingestion controls.</Text>
+        <Text style={styles.subtitle}>Real-time performance monitoring.</Text>
 
         <MetricCard>
-          <SectionEyebrow color={theme.colors.positive}>Network control</SectionEyebrow>
-          <Text style={styles.cardTitle}>Data Throttling Configurator</Text>
-          <View style={{ height: theme.spacing.md }} />
-          <ThrottleSlider
-            value={effectiveIntervalMs}
-            onValueChange={setUpdateIntervalMs}
-            disabled={adaptivePolling}
-          />
-          <Text style={styles.disclaimer}>
-            {adaptivePolling
-              ? "Interval is computed automatically from live FPS and app foreground state."
-              : "Requested from the backend; it can only be throttled down from the server's base broadcast tick, never faster."}
-          </Text>
-          <ToggleRow
-            label="Binary Protocol Compression"
-            value={compressionEnabled}
-            onValueChange={setCompressionEnabled}
-            note={compressionEnabled ? "Payloads sent as msgpack binary frames" : "Payloads sent as plain JSON"}
-          />
-          <ToggleRow
-            label="Adaptive Polling Strategy"
-            value={adaptivePolling}
-            onValueChange={setAdaptivePolling}
-            note={adaptivePolling ? "Interval auto-tunes from FPS + foreground state" : "Manual interval via slider above"}
-          />
-        </MetricCard>
-
-        <MetricCard style={{ marginTop: theme.spacing.lg }}>
           <View style={styles.dashboardHeader}>
             <View>
               <SectionEyebrow color={theme.colors.negative}>System telemetry</SectionEyebrow>

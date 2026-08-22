@@ -1,13 +1,13 @@
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { PairMeta, PairState } from "../types/market";
-import { theme } from "../theme";
-import { FlashingPrice } from "./FlashingPrice";
+import { PairMeta, PairState } from "../../types/market";
+import { theme } from "../../theme";
+import { FlashingPrice } from "../common/FlashingPrice";
 import { OrderBookTable } from "./OrderBookTable";
-import { ConnectionDot } from "./ConnectionDot";
+import { ConnectionDot } from "../common/ConnectionDot";
 import { Metric } from "./Metric";
 import { PressureBar } from "./PressureBar";
-import { formatPrice, formatTimestamp } from "../utils/format";
+import { formatPrice, formatTimestamp } from "../../utils/format";
 
 interface DetailContentProps {
   pairState: PairState;

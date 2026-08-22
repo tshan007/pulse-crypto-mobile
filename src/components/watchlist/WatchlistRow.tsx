@@ -1,10 +1,10 @@
 import React, { useCallback } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { useMarketStore } from "../store/marketStore";
-import { FlashingPrice } from "./FlashingPrice";
-import { ConnectionDot } from "./ConnectionDot";
-import { displayPairName, formatPercent, formatPrice } from "../utils/format";
-import { theme } from "../theme";
+import { useMarketStore } from "../../store/marketStore";
+import { FlashingPrice } from "../common/FlashingPrice";
+import { ConnectionDot } from "../common/ConnectionDot";
+import { displayPairName, formatPercent, formatPrice } from "../../utils/format";
+import { theme } from "../../theme";
 
 interface WatchlistRowProps {
   pair: string;

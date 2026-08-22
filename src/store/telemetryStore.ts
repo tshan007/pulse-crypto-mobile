@@ -40,7 +40,7 @@ interface TelemetryState {
  * (`updateIntervalMs`/`compressionEnabled`/`adaptivePolling`) and the live
  * `fps`/`appState` signals that drive adaptive polling — read imperatively
  * from `useMarketSocket` (to build outgoing `configure` messages) and via
- * selectors from `TelemetrySettingsScreen`.
+ * selectors from `SettingsScreen`/`TelemetryScreen`.
  */
 export const useTelemetryStore = create<TelemetryState>((set, get) => ({
   messageTimestamps: [],

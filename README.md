@@ -22,8 +22,7 @@ A React Native (Expo) app that visualises live market data from the PulseCrypto 
   - Env var changes only apply to processes started *after* you set them — fully restart your
     terminal (and VSCode, if you set them while it was already open) before retrying.
 - **To run on iOS:** macOS only — Xcode and CocoaPods are required to build the native
-  project. The `ios`/`ios:*` npm scripts detect a non-macOS host and fail fast with a clear
-  message instead of a deep Xcode/CocoaPods error.
+  project.
 - **No native build at all:** scan the QR code shown by `npm start` with the **Expo Go** app
   on a physical device — this skips the Android/iOS SDK requirements above entirely, at the
   cost of not testing the actual native build.

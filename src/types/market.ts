@@ -37,4 +37,9 @@ export type ClientMessage = {
   type: "configure";
   intervalMs?: number;
   format?: WireFormat;
+  // "all" = every tracked pair (default); an array (possibly empty) = only
+  // those pairs. Lets the currently-focused screen scope down what the
+  // backend bothers sending — e.g. a detail screen only needs its own pair,
+  // and a screen with no pair data on it needs none at all.
+  pairs?: "all" | string[];
 };

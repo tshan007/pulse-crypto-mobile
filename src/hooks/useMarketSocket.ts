@@ -4,6 +4,7 @@ import { decode } from "@msgpack/msgpack";
 import { config } from "../config";
 import { useMarketStore } from "../store/marketStore";
 import { useTelemetryStore } from "../store/telemetryStore";
+import { useSubscriptionStore } from "../store/subscriptionStore";
 import { ClientMessage, ServerMessage } from "../types/market";
 import { wsDebug } from "../utils/wsDebug";
 import { computeAdaptiveIntervalMs } from "../utils/adaptivePolling";
@@ -21,8 +22,10 @@ import { useFrameRate } from "./useFrameRate";
  * sockets are often silently dropped by the OS.
  *
  * Also owns the client->server "configure" control channel: on open (and
- * whenever the user changes a data-throttling setting) it sends the
- * backend our desired broadcast cadence and wire format (json/msgpack).
+ * whenever the user changes a data-throttling setting, or the focused
+ * screen's pair scope changes — see subscriptionStore) it sends the
+ * backend our desired broadcast cadence, wire format (json/msgpack), and
+ * which pairs we actually need data for.
  * FPS sampling lives here too (not in the settings screen) so there's a
  * single requestAnimationFrame loop feeding both the adaptive-interval
  * calculation and the RingGauge display, mirrored into telemetryStore.
@@ -63,6 +66,7 @@ export function useMarketSocket() {
         type: "configure",
         intervalMs,
         format: state.compressionEnabled ? "msgpack" : "json",
+        pairs: useSubscriptionStore.getState().pairScope,
       };
     }
 
@@ -139,6 +143,7 @@ export function useMarketSocket() {
   const compressionEnabled = useTelemetryStore((s) => s.compressionEnabled);
   const adaptivePolling = useTelemetryStore((s) => s.adaptivePolling);
   const appState = useTelemetryStore((s) => s.appState);
+  const pairScope = useSubscriptionStore((s) => s.pairScope);
 
   const effectiveIntervalMs = useMemo(
     () => (adaptivePolling ? computeAdaptiveIntervalMs(fps, appState) : updateIntervalMs),
@@ -148,7 +153,10 @@ export function useMarketSocket() {
   useEffect(() => {
     // Dragging ThrottleSlider fires onValueChange continuously in 10ms
     // steps — debounce so a drag gesture sends one configure(), not one
-    // per step.
+    // per step. Pair-scope changes (screen navigation) piggyback on the
+    // same debounce; they're infrequent enough that the 200ms delay is
+    // unnoticeable but avoids a double-send if a scope change lands in the
+    // same tick as an interval/format change.
     const handle = setTimeout(() => {
       const ws = wsRef.current;
       if (!ws || ws.readyState !== WebSocket.OPEN) return;
@@ -156,10 +164,11 @@ export function useMarketSocket() {
         type: "configure",
         intervalMs: effectiveIntervalMs,
         format: compressionEnabled ? "msgpack" : "json",
+        pairs: pairScope,
       };
       ws.send(JSON.stringify(message));
       wsDebug.configureSent(message);
     }, 200);
     return () => clearTimeout(handle);
-  }, [effectiveIntervalMs, compressionEnabled]);
+  }, [effectiveIntervalMs, compressionEnabled, pairScope]);
 }

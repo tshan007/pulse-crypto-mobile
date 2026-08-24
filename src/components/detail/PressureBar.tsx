@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { Animated, StyleSheet, Text, View } from "react-native";
 import { theme } from "../../theme";
 
 interface PressureBarProps {
@@ -7,13 +7,33 @@ interface PressureBarProps {
   sellPressure: number | null;
 }
 
+// Same per-instance Animated.Value approach as FlashingPrice — a single
+// tween on this component's own value, not a shared/global driver.
 export const PressureBar = React.memo(function PressureBar({ buyPressure, sellPressure }: PressureBarProps) {
   const buy = buyPressure ?? 50;
   const sell = sellPressure ?? 50;
+  const widthAnim = useRef(new Animated.Value(buy)).current;
+
+  useEffect(() => {
+    Animated.timing(widthAnim, {
+      toValue: buy,
+      duration: 300,
+      useNativeDriver: false, // width isn't supported by the native driver
+    }).start();
+  }, [buy, widthAnim]);
+
   return (
     <View>
       <View style={styles.pressureBarTrack}>
-        <View style={[styles.pressureBarFill, { width: `${buy}%`, backgroundColor: theme.colors.success }]} />
+        <Animated.View
+          style={[
+            styles.pressureBarFill,
+            {
+              width: widthAnim.interpolate({ inputRange: [0, 100], outputRange: ["0%", "100%"] }),
+              backgroundColor: theme.colors.success,
+            },
+          ]}
+        />
       </View>
       <View style={styles.pressureLabels}>
         <Text style={styles.pressureLabelBuy}>Buy {buy.toFixed(0)}%</Text>

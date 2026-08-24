@@ -60,7 +60,7 @@ export const colors = {
   favourite: "#facc15",
 
   successWash: "rgba(34,197,94,0.15)",
-  successOverlay: "rgba(34,197,94,0.35)",
-  dangerWash: "rgba(239,68,68,0.15)",
+  successOverlay: "rgba(34, 197, 94, 0.43)",
+  dangerWash: "rgba(239, 68, 68, 0.26)",
   dangerOverlay: "rgba(239,68,68,0.35)",
 } as const;

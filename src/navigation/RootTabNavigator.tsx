@@ -30,6 +30,7 @@ export function RootTabNavigator() {
       initialRouteName="MarketsStack"
       screenOptions={{
         headerShown: false,
+        animation: "shift",
         tabBarStyle: { backgroundColor: theme.colors.background, borderTopColor: theme.palette.neutral[800] },
         tabBarActiveTintColor: theme.colors.positive,
         tabBarInactiveTintColor: theme.colors.textMuted,

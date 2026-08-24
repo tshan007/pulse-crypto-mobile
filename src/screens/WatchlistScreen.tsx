@@ -6,6 +6,7 @@ import { WatchlistRow } from "../components/watchlist/WatchlistRow";
 import { ConnectionStatusBadge } from "../components/common/ConnectionStatusBadge";
 import { useMarketStore } from "../store/marketStore";
 import { usePairsMeta } from "../hooks/usePairsMeta";
+import { usePairScope } from "../hooks/usePairScope";
 import { displayPairName } from "../utils/format";
 import { RootStackParamList } from "../navigation/types";
 import { theme } from "../theme";
@@ -18,6 +19,7 @@ export function WatchlistScreen({ navigation }: Props) {
   const socketStatus = useMarketStore((s) => s.socketStatus);
   const supportedPairs = useMarketStore((s) => s.supportedPairs);
   const { refreshing, refresh } = usePairsMeta();
+  usePairScope("all");
 
   const filteredPairs = useMemo(() => {
     const q = query.trim().toLowerCase();

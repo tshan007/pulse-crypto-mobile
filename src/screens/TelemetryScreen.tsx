@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useMarketStore } from "../store/marketStore";
 import { useTelemetryStore } from "../store/telemetryStore";
 import { useSocketMetrics } from "../hooks/useSocketMetrics";
+import { usePairScope } from "../hooks/usePairScope";
 import { ConnectionStatusBadge } from "../components/common/ConnectionStatusBadge";
 import { RingGauge } from "../components/telemetry/RingGauge";
 import { MetricCard, SectionEyebrow } from "../components/telemetry/MetricCard";
@@ -22,6 +23,9 @@ export function TelemetryScreen() {
   const socketStatus = useMarketStore((s) => s.socketStatus);
   const messagesPerSecond = useSocketMetrics();
   const fps = useTelemetryStore((s) => s.fps);
+  // This dashboard doesn't render per-pair data — messagesPerSecond/fps come
+  // from telemetryStore either way, so there's no reason to receive it.
+  usePairScope([]);
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>

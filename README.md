@@ -45,15 +45,18 @@ npm run start:prd  # against the production backend
 ```
 
 `npm run android`/`android:uat`/`android:prd` and `ios`/`ios:uat`/`ios:prd` work the same
-way for `expo run:android`/`expo run:ios` — plain `android`/`ios` default to `:dev`.
+way for `expo run:android`/`expo run:ios` — plain `android`/`ios` default to `:dev`. Each of
+`start`/`android`/`ios`/`web` also has a `:debug` variant (e.g. `npm run start:debug`),
+loading `.env.debug` — identical to `.env.development` today, kept as a separate target for
+debug-only overrides without touching the default dev env.
 
 Press `i` for iOS simulator, `a` for Android emulator, or scan the QR code with Expo Go
 on a physical device.
 
 ### Environments
 
-Each target has its own env file — `.env.development`, `.env.uat`, `.env.production` —
-loaded via `dotenv-cli`'s cascade mode (`dotenv -c <environment>`, see `package.json`),
+Each target has its own env file — `.env.development`, `.env.uat`, `.env.production`,
+`.env.debug` — loaded via `dotenv-cli`'s cascade mode (`dotenv -c <environment>`, see `package.json`),
 which layers `.env.<environment>.local` → `.env.local` → `.env.<environment>` → `.env`
 (first match for a given variable wins). Only values that genuinely differ by environment
 live there: backend host/port, whether the backend is served over TLS
@@ -151,9 +154,9 @@ a pure-JS library that needs no native linking under managed Expo).
 
 **One `requestAnimationFrame` sampler, not two.** `useFrameRate`'s FPS sampling is called
 once, inside `useMarketSocket` (needed there to drive the adaptive-polling calculation),
-and mirrored into `telemetryStore`. `TelemetrySettingsScreen` reads `fps` from the store
-instead of calling `useFrameRate()` itself — the same "compute once, store, read via
-selector" pattern the store already uses for `messagesPerSecond`.
+and mirrored into `telemetryStore`. `TelemetryScreen`/`SettingsScreen` read `fps` from the
+store instead of calling `useFrameRate()` themselves — the same "compute once, store, read
+via selector" pattern the store already uses for `messagesPerSecond`.
 
 **Pull-to-refresh only touches `/pairs/meta`.** `usePairsMeta`'s `refresh()` is a plain
 REST call, entirely independent of the WebSocket connection — pulling to refresh cannot
@@ -180,8 +183,6 @@ rather than needing special-case logic to avoid interference.
 
 ## Verification performed in this environment
 
-This sandbox has no simulator/emulator, so the app couldn't be visually run end-to-end
-here. What *was* verified:
 - `tsc --noEmit` passes cleanly across the whole `src/` tree.
 - `expo export --platform ios` and `--platform android` both bundle successfully via
   Metro (830/828 modules resolved, zero resolution errors) — this exercises the full
@@ -191,9 +192,12 @@ here. What *was* verified:
   removed, since the app doesn't use gesture-handler-dependent features).
 - The backend's WebSocket/REST behavior was separately verified live (see
   the separate pulsecrypto-backend repo's README), confirming the payload shapes this app's types/store assume.
+- Local Android emulator runs are supported from this environment (`ANDROID_HOME`/
+  `ANDROID_SDK_ROOT` configured, AVDs available via Android Studio) — see Prerequisites above.
 
 A device/simulator screen recording is still needed as a deliverable per the assignment
-and should be captured by running `npx expo start` locally against the backend.
+and should be captured by running `npx expo start` (or `npm run android`) locally against
+the backend.
 
 ## AI-assisted development
 

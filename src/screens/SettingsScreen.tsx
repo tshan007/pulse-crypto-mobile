@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useMarketStore } from "../store/marketStore";
 import { useTelemetryStore } from "../store/telemetryStore";
 import { computeAdaptiveIntervalMs } from "../utils/adaptivePolling";
+import { usePairScope } from "../hooks/usePairScope";
 import { ConnectionStatusBadge } from "../components/common/ConnectionStatusBadge";
 import { MetricCard, SectionEyebrow } from "../components/telemetry/MetricCard";
 import { ThrottleSlider } from "../components/telemetry/ThrottleSlider";
@@ -12,6 +13,8 @@ import { theme } from "../theme";
 
 export function SettingsScreen() {
   const socketStatus = useMarketStore((s) => s.socketStatus);
+  // This screen doesn't render per-pair data, just throttling controls.
+  usePairScope([]);
 
   const fps = useTelemetryStore((s) => s.fps);
   const appState = useTelemetryStore((s) => s.appState);

@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useMemo, useRef } from "react";
+import { Animated, StyleSheet, Text, View } from "react-native";
 import { BookLevel } from "../../types/market";
 import { formatPrice, formatQuantity } from "../../utils/format";
 import { theme } from "../../theme";
@@ -11,11 +11,10 @@ interface OrderBookTableProps {
 
 /**
  * Renders bids and asks with a background bar sized to relative volume.
- * Bar widths are plain style values (not Animated) — React Native's layout
- * engine already animates width transitions smoothly enough at our ~100ms
- * update cadence via `LayoutAnimation` triggered once per snapshot in the
- * parent screen; adding per-cell Animated.Value here would be overkill for
- * a value that already redraws on every store update.
+ * Each row's bar tweens its width via its own Animated.Value, same pattern
+ * as PressureBar/FlashingPrice — DetailScreen's LayoutAnimation call still
+ * runs on bid/ask changes for everything else in the screen, but no longer
+ * does the work for these specific widths.
  */
 export const OrderBookTable = React.memo(function OrderBookTable({ bids, asks }: OrderBookTableProps) {
   const maxVolume = useMemo(() => {
@@ -53,12 +52,24 @@ const OrderRow = React.memo(function OrderRow({
   side: "bid" | "ask";
 }) {
   const widthPct = Math.min(100, (Number(qty) / maxVolume) * 100);
+  const widthAnim = useRef(new Animated.Value(widthPct)).current;
+
+  useEffect(() => {
+    Animated.timing(widthAnim, {
+      toValue: widthPct,
+      duration: 300,
+      useNativeDriver: false, // width isn't supported by the native driver
+    }).start();
+  }, [widthPct, widthAnim]);
+
   return (
     <View style={styles.row}>
-      <View
+      <Animated.View
         style={[
           styles.volumeBar,
-          { width: `${widthPct}%` },
+          {
+            width: widthAnim.interpolate({ inputRange: [0, 100], outputRange: ["0%", "100%"] }),
+          },
           side === "bid" ? styles.bidBar : styles.askBar,
         ]}
       />

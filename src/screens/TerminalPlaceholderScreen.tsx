@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { usePairScope } from "../hooks/usePairScope";
 import { theme } from "../theme";
 
 /**
@@ -10,6 +11,8 @@ import { theme } from "../theme";
  * complete and reviewable even before every screen behind it exists.
  */
 export function TerminalPlaceholderScreen() {
+  usePairScope([]);
+
   return (
     <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
       <Text style={styles.title}>Terminal</Text>

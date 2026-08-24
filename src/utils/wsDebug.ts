@@ -38,7 +38,10 @@ export const wsDebug = {
 
   configureSent(msg: ClientMessage) {
     if (!config.debugWs) return;
-    console.log(`[ws] ▶ configure format=${msg.format ?? "(unchanged)"} intervalMs=${msg.intervalMs ?? "(unchanged)"}`);
+    const pairs = msg.pairs === undefined ? "(unchanged)" : msg.pairs === "all" ? "all" : `[${msg.pairs.join(",")}]`;
+    console.log(
+      `[ws] ▶ configure format=${msg.format ?? "(unchanged)"} intervalMs=${msg.intervalMs ?? "(unchanged)"} pairs=${pairs}`
+    );
   },
 
   parseError(err: unknown, raw: string) {

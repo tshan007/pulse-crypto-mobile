@@ -13,6 +13,7 @@ export function MarketsStackNavigator() {
       screenOptions={{
         headerStyle: { backgroundColor: theme.colors.background },
         headerTintColor: theme.colors.textPrimary,
+        animation: "slide_from_right",
       }}
     >
       <Stack.Screen name="Watchlist" component={WatchlistScreen} options={{ headerShown: false }} />

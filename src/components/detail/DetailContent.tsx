@@ -34,7 +34,7 @@ export function DetailContent({ pairState, meta }: DetailContentProps) {
       </View>
 
       <View style={styles.pressureSection}>
-        <Text style={styles.sectionTitle}>Buy / sell pressure</Text>
+        <Text style={styles.sectionTitle}>Buy / Sell Pressure</Text>
         <PressureBar buyPressure={buyPressure} sellPressure={sellPressure} />
       </View>
 

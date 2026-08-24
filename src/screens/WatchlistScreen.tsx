@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { FlatList, RefreshControl, StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
+import { FlashList } from "@shopify/flash-list";
 import { SafeAreaView } from "react-native-safe-area-context";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { WatchlistRow } from "../components/watchlist/WatchlistRow";
@@ -59,13 +60,16 @@ export function WatchlistScreen({ navigation }: Props) {
         autoCorrect={false}
       />
 
-      <FlatList
+      <FlashList<string>
         data={filteredPairs}
         keyExtractor={(item) => item}
         renderItem={({ item }) => <WatchlistRow pair={item} onPress={handleOpenDetail} />}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor={theme.colors.textStrong} />
-        }
+        refreshing={refreshing}
+        onRefresh={refresh}
+        // Default (250dp) leaves too little pre-rendered buffer for a fast
+        // scroll to stay ahead of — doubling it trades a bit more upfront
+        // render work for fewer blank cells while scrolling.
+        drawDistance={500}
         ListEmptyComponent={<Text style={styles.empty}>No pairs match "{query}"</Text>}
       />
     </SafeAreaView>

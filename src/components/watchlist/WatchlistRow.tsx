@@ -24,13 +24,18 @@ export const WatchlistRow = React.memo(function WatchlistRow({ pair, onPress }: 
   const pairState = useMarketStore((s) => s.pairs[pair]);
   const isFavourite = useMarketStore((s) => Boolean(s.favourites[pair]));
   const toggleFavourite = useMarketStore((s) => s.toggleFavourite);
+  // pairState.connected is the backend's last-reported per-pair status —
+  // it only updates on an incoming snapshot, so it goes stale once our own
+  // socket drops. Gate it on socketStatus too so the dot flips to offline
+  // immediately on error/close instead of showing the last good value.
+  const socketStatus = useMarketStore((s) => s.socketStatus);
 
   const handlePress = useCallback(() => onPress(pair), [onPress, pair]);
   const handleToggleFavourite = useCallback(() => toggleFavourite(pair), [toggleFavourite, pair]);
 
   const price = pairState?.price ?? null;
   const change24h = pairState?.change24h ?? null;
-  const connected = pairState?.connected ?? false;
+  const connected = socketStatus === "open" && (pairState?.connected ?? false);
 
   const changeColor = change24h === null ? styles.neutral : change24h >= 0 ? styles.positive : styles.negative;
 

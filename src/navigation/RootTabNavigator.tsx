@@ -31,6 +31,7 @@ export function RootTabNavigator() {
       screenOptions={{
         headerShown: false,
         animation: "shift",
+        lazy: true,
         tabBarStyle: { backgroundColor: theme.colors.background, borderTopColor: theme.palette.neutral[800] },
         tabBarActiveTintColor: theme.colors.positive,
         tabBarInactiveTintColor: theme.colors.textMuted,

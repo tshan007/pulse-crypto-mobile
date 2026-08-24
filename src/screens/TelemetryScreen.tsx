@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useMarketStore } from "../store/marketStore";
 import { useTelemetryStore } from "../store/telemetryStore";
 import { useSocketMetrics } from "../hooks/useSocketMetrics";
+import { useDeviceMemory } from "../hooks/useDeviceMemory";
 import { usePairScope } from "../hooks/usePairScope";
 import { ConnectionStatusBadge } from "../components/common/ConnectionStatusBadge";
 import { RingGauge } from "../components/telemetry/RingGauge";
@@ -12,16 +13,10 @@ import { Sparkline } from "../components/telemetry/Sparkline";
 import { InfoRow } from "../components/telemetry/InfoRow";
 import { theme } from "../theme";
 
-// Static placeholder series for the memory tracker. Real JS heap sampling
-// isn't reliably available cross-platform in a managed Expo app (Hermes
-// doesn't expose `performance.memory`) — rather than fabricate live-looking
-// numbers, this is a fixed, clearly-artificial dataset until a native
-// module (or a dev-only JSC-specific check) is deliberately added.
-const PLACEHOLDER_MEMORY_SERIES = [98, 102, 101, 108, 112, 110, 118, 124, 121, 130, 128, 140];
-
 export function TelemetryScreen() {
   const socketStatus = useMarketStore((s) => s.socketStatus);
   const messagesPerSecond = useSocketMetrics();
+  const memorySeries = useDeviceMemory();
   const fps = useTelemetryStore((s) => s.fps);
   // This dashboard doesn't render per-pair data — messagesPerSecond/fps come
   // from telemetryStore either way, so there's no reason to receive it.
@@ -64,10 +59,12 @@ export function TelemetryScreen() {
           <View style={styles.metricBlock}>
             <View style={styles.memoryHeader}>
               <Text style={styles.metricLabel}>Memory Footprint Tracker</Text>
-              <Text style={styles.memoryValue}>~{PLACEHOLDER_MEMORY_SERIES.at(-1)} MB</Text>
+              <Text style={styles.memoryValue}>
+                {memorySeries.length > 0 ? `~${memorySeries.at(-1)!.toFixed(0)} MB` : "—"}
+              </Text>
             </View>
-            <Sparkline data={PLACEHOLDER_MEMORY_SERIES} color={theme.colors.negative} />
-            <Text style={styles.disclaimer}>Placeholder data — real JS heap sampling isn't available on Hermes.</Text>
+            <Sparkline data={memorySeries} color={theme.colors.negative} />
+            <Text style={styles.disclaimer}>Device-wide used memory — not JS-heap-only (iOS has no per-app API).</Text>
           </View>
         </MetricCard>
 

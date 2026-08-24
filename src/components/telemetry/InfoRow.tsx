@@ -10,12 +10,7 @@ interface InfoRowProps {
   subtitle: string;
 }
 
-/**
- * Matches the design spec's "GPU Acceleration / API Latency / Storage
- * Cache" row style. These three are explicitly placeholders — see the
- * screen's header comment for why (no reliable RN API for GPU pipeline
- * status, JS heap memory, or true network latency without a native module).
- */
+/** Icon + title/subtitle row for the telemetry screen's info list. */
 export const InfoRow = React.memo(function InfoRow({ icon, iconBackground, iconColor, title, subtitle }: InfoRowProps) {
   return (
     <View style={styles.row}>

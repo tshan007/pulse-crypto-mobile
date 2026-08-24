@@ -9,9 +9,7 @@ interface MarketStoreState {
   socketStatus: SocketStatus;
   favorites: Record<string, true>;
   favoritesHydrated: boolean;
-  // Known pair symbols, e.g. "BTCUSDT". Seeded from the SUPPORTED_PAIRS
-  // fallback so the watchlist has something to render on cold start, then
-  // replaced with the backend's actual set once GET /pairs resolves.
+  // Cold-start fallback; replaced with the backend's actual set once GET /pairs resolves.
   supportedPairs: string[];
 
   applySnapshot: (data: PairState[]) => void;
@@ -22,17 +20,7 @@ interface MarketStoreState {
   hydrateFavorites: (pairs: string[]) => void;
 }
 
-/**
- * Central store for live market data.
- *
- * Performance note: components should always read via a narrow selector,
- * e.g. `useMarketStore(s => s.pairs[pair])`, never the whole `pairs` map.
- * Zustand only re-renders a component when the *selected* value's reference
- * changes. Since `applySnapshot` replaces only the entries that actually
- * changed (see below) and reuses the existing object reference for anything
- * unchanged, a tick that updates BTC's price does not cause ETH's row to
- * re-render — each row's selector return value stays referentially equal.
- */
+/** Central store for live market data. Read via a narrow selector (`s => s.pairs[pair]`), never the whole `pairs` map. */
 export const useMarketStore = create<MarketStoreState>((set, get) => ({
   pairs: {},
   meta: {},
@@ -48,8 +36,7 @@ export const useMarketStore = create<MarketStoreState>((set, get) => ({
 
     for (const incoming of data) {
       const existing = current[incoming.pair];
-      // Skip the update entirely (keep the same object reference) if
-      // nothing meaningful changed, so subscribed rows don't re-render.
+      // Keep the same object reference if nothing meaningful changed, so subscribed rows don't re-render.
       if (
         existing &&
         existing.price === incoming.price &&

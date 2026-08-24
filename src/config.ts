@@ -1,9 +1,6 @@
 import { Platform } from "react-native";
 
-// Android emulator can't reach the host machine via localhost — it needs the
-// special 10.0.2.2 alias. iOS simulator and web can use localhost directly.
-// Override with EXPO_PUBLIC_BACKEND_HOST if running against a physical
-// device or a non-default backend location.
+// Android emulator needs the 10.0.2.2 alias to reach the host machine; override with EXPO_PUBLIC_BACKEND_HOST otherwise.
 const DEFAULT_HOST = Platform.select({
   android: "10.0.2.2",
   default: "localhost",
@@ -11,8 +8,7 @@ const DEFAULT_HOST = Platform.select({
 
 const HOST = process.env.EXPO_PUBLIC_BACKEND_HOST ?? DEFAULT_HOST;
 const PORT = process.env.EXPO_PUBLIC_BACKEND_PORT ?? "8080";
-// Set EXPO_PUBLIC_BACKEND_SECURE=true for any backend served over TLS (uat/prd) —
-// local dev's plain-HTTP backend leaves this unset.
+// Set EXPO_PUBLIC_BACKEND_SECURE=true for a TLS backend (uat/prd); unset for local dev.
 const SECURE = process.env.EXPO_PUBLIC_BACKEND_SECURE === "true";
 
 export const config = {
@@ -23,8 +19,6 @@ export const config = {
   reconnectMaxDelayMs: 30000,
   // How long a price-change flash highlight stays visible.
   flashDurationMs: 600,
-  // Set EXPO_PUBLIC_DEBUG_WS=true to log every WS lifecycle event and
-  // message summary to the Metro/Expo terminal. Off by default since at a
-  // 100ms broadcast interval it would otherwise flood the console.
+  // EXPO_PUBLIC_DEBUG_WS=true logs WS lifecycle/messages; off by default (100ms interval would flood the console).
   debugWs: process.env.EXPO_PUBLIC_DEBUG_WS === "true",
 };

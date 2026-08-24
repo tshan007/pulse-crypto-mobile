@@ -22,26 +22,12 @@ interface TelemetryState {
   adaptivePolling: boolean;
   setAdaptivePolling: (v: boolean) => void;
 
-  // Mirrored from useMarketSocket's AppState listener so adaptive-polling
-  // logic and the settings screen can both read it without a second
-  // subscription.
+  // Mirrored from useMarketSocket's AppState listener.
   appState: AppStateStatus;
   setAppState: (s: AppStateStatus) => void;
 }
 
-/**
- * Tracks real WebSocket message arrivals so the telemetry screen can show
- * an actual ingestion rate, not a mocked number. `recordMessage()` is
- * called once per message inside `useMarketSocket`; `recomputeRate()` is
- * called on a timer by whichever screen is displaying the rate, so we're
- * not doing unnecessary work when nobody's looking at it.
- *
- * Also the single source of truth for the data-throttling settings
- * (`updateIntervalMs`/`compressionEnabled`/`adaptivePolling`) and the live
- * `fps`/`appState` signals that drive adaptive polling — read imperatively
- * from `useMarketSocket` (to build outgoing `configure` messages) and via
- * selectors from `SettingsScreen`/`TelemetryScreen`.
- */
+/** Real WS message rate, FPS, and the data-throttling settings — single source of truth for `useMarketSocket` and the Settings/Telemetry screens. */
 export const useTelemetryStore = create<TelemetryState>((set, get) => ({
   messageTimestamps: [],
   messagesPerSecond: 0,

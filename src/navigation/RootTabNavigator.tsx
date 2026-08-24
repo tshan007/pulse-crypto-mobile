@@ -10,20 +10,14 @@ import { theme } from "../theme";
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
-// Simple text-glyph tab icons for now, to avoid pulling in an icon font
-// dependency for a UI detail that's easy to swap later.
+// Text-glyph tab icons for now — avoids an icon font dependency.
 function TabIcon({ glyph, focused }: { glyph: string; focused: boolean }) {
   return (
     <Text style={{ fontSize: 18, color: focused ? theme.colors.positive : theme.colors.textMuted }}>{glyph}</Text>
   );
 }
 
-/**
- * Bottom tabs: Terminal / Markets / Telemetry / Settings, matching the
- * trading-terminal wireframe's tab bar. Telemetry (read-only performance
- * dashboard) and Settings (network/data ingestion controls) are separate
- * screens — split out from a single combined screen they previously shared.
- */
+/** Bottom tabs: Terminal / Markets / Telemetry / Settings. */
 export function RootTabNavigator() {
   return (
     <Tab.Navigator

@@ -12,12 +12,7 @@ interface RingGaugeProps {
   color?: string;
 }
 
-/**
- * A circular progress ring, e.g. for the JS thread frame rate. Built with
- * react-native-svg rather than a GL context — this is a static vector
- * shape redrawn on state change, not something that benefits from a raw
- * GPU pipeline. See screen-level notes for why GLView was ruled out here.
- */
+/** Circular progress ring, e.g. for the JS thread frame rate. */
 export const RingGauge = React.memo(function RingGauge({
   value,
   maxValue,

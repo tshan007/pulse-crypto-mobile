@@ -9,13 +9,7 @@ interface OrderBookTableProps {
   asks: BookLevel[];
 }
 
-/**
- * Renders bids and asks with a background bar sized to relative volume.
- * Each row's bar tweens its width via its own Animated.Value, same pattern
- * as PressureBar/FlashingPrice — DetailScreen's LayoutAnimation call still
- * runs on bid/ask changes for everything else in the screen, but no longer
- * does the work for these specific widths.
- */
+/** Renders bids/asks with a volume bar per row, each animated via its own Animated.Value. */
 export const OrderBookTable = React.memo(function OrderBookTable({ bids, asks }: OrderBookTableProps) {
   const maxVolume = useMemo(() => {
     const all = [...bids, ...asks].map(([, qty]) => Number(qty));

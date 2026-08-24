@@ -4,12 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { usePairScope } from "../hooks/usePairScope";
 import { theme } from "../theme";
 
-/**
- * Stand-in for the Terminal (deep order book + market depth chart) screen
- * from the trading-terminal wireframe. Not yet built — kept as an explicit
- * placeholder rather than omitted from the tab bar, so the nav structure is
- * complete and reviewable even before every screen behind it exists.
- */
+/** Placeholder for the not-yet-built Terminal screen. */
 export function TerminalPlaceholderScreen() {
   usePairScope([]);
 

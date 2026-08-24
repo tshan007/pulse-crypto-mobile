@@ -4,12 +4,7 @@ import DeviceInfo from "react-native-device-info";
 const SAMPLE_INTERVAL_MS = 2000;
 const MAX_SAMPLES = 12;
 
-/**
- * Samples real used memory on an interval and keeps a rolling window for
- * the telemetry sparkline. This is device-wide usage, not JS-heap-only —
- * iOS has no public API for per-app memory, so react-native-device-info
- * reports whole-device usage on both platforms.
- */
+/** Samples real (device-wide, not JS-heap-only) used memory on an interval for the telemetry sparkline. */
 export function useDeviceMemory() {
   const [series, setSeries] = useState<number[]>([]);
   const mountedRef = useRef(true);

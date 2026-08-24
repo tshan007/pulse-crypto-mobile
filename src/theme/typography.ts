@@ -1,10 +1,4 @@
-/**
- * Font family names as they'll be registered with expo-font once the
- * corresponding @expo-google-fonts packages are installed (not yet added —
- * that's a follow-up step). Until then, RN falls back to the platform
- * default sans-serif/monospace font for any family name it doesn't
- * recognize, so the app still renders correctly with these tokens in place.
- */
+/** Font family names for expo-font — the @expo-google-fonts packages aren't installed yet, so RN falls back to the platform default. */
 export const fontFamily = {
   headline: "HankenGrotesk-Bold", // display/heading text
   headlineMedium: "HankenGrotesk-Medium",
@@ -15,11 +9,7 @@ export const fontFamily = {
   labelMedium: "JetBrainsMono-Medium",
 } as const;
 
-/**
- * Usage-scale font sizes. The "Aa" specimens in the design spec are large
- * display samples of each family, not real UI sizes — these are the sizes
- * actually intended for use across screens.
- */
+/** Usage-scale font sizes actually used across screens (not the design spec's large "Aa" specimens). */
 export const fontSize = {
   displayLarge: 34, // e.g. detail screen's current price
   headingLarge: 22, // screen titles

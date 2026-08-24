@@ -1,15 +1,4 @@
-/**
- * Generates a Tailwind-style color scale (50 → 950) from a single base hex
- * value, rather than hand-authoring every step. This keeps the palette
- * systematic and gives each brand color exactly one source of truth — the
- * base hex from the design spec — instead of ~10 independently-chosen hex
- * codes per color that can drift out of sync over time.
- *
- * How it works: each step is the base color mixed toward black (for steps
- * darker than the base's "anchor" position in the scale) or toward white
- * (for steps lighter than it), with mix strength increasing the further a
- * step is from the anchor.
- */
+/** Generates a Tailwind-style color scale (50 → 950) from one base hex, mixing toward white/black from an anchor step. */
 
 export const SCALE_STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as const;
 export type ScaleStep = (typeof SCALE_STEPS)[number];
@@ -49,16 +38,7 @@ function mix(hex: string, target: RGB, t: number): string {
 const BLACK: RGB = { r: 0, g: 0, b: 0 };
 const WHITE: RGB = { r: 255, g: 255, b: 255 };
 
-/**
- * @param baseHex     The brand color from the design spec, e.g. "#00C57A".
- * @param anchorStep  Which scale step `baseHex` itself represents. Brand
- *                    hues (secondary/tertiary) are typically anchored at
- *                    500 (their "purest" mid-tone); colors given as
- *                    near-black/near-dark base tones (primary/neutral) are
- *                    anchored near the dark end (900/950).
- * @param maxWhiteMix How far the lightest step (50) leans toward pure white.
- * @param maxBlackMix How far the darkest step (950) leans toward pure black.
- */
+/** @param anchorStep Which scale step `baseHex` itself represents. */
 export function generateScale(
   baseHex: string,
   anchorStep: ScaleStep,

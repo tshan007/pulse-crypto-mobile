@@ -12,8 +12,7 @@ export function usePairs() {
       const pairs = await fetchPairs();
       setSupportedPairs(pairs);
     } catch (err) {
-      // Keep the existing (constants.ts-seeded or previously fetched) list
-      // on failure rather than clearing the watchlist.
+      // Keep the existing list on failure rather than clearing the watchlist.
       setError((err as Error).message);
     }
   }, [setSupportedPairs]);

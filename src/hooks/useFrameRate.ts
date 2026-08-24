@@ -1,13 +1,6 @@
 import { useEffect, useState } from "react";
 
-/**
- * Samples the JS thread's actual frame rate via requestAnimationFrame.
- * This measures the JS thread specifically (matching the label used in the
- * design spec, "JS Thread Frame Rate") — it is not a measure of native UI
- * thread FPS, which RN doesn't expose without a native module. If the JS
- * thread is busy (e.g. a heavy re-render), this number will genuinely drop,
- * which is exactly the useful signal a developer wants from this gauge.
- */
+/** Samples the JS thread's frame rate via requestAnimationFrame (not native UI thread FPS). */
 export function useFrameRate(sampleWindowMs = 1000) {
   const [fps, setFps] = useState(60);
 

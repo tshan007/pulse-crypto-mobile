@@ -18,8 +18,7 @@ export function TelemetryScreen() {
   const messagesPerSecond = useSocketMetrics();
   const memorySeries = useDeviceMemory();
   const fps = useTelemetryStore((s) => s.fps);
-  // This dashboard doesn't render per-pair data — messagesPerSecond/fps come
-  // from telemetryStore either way, so there's no reason to receive it.
+  // No per-pair data rendered here.
   usePairScope([]);
 
   return (

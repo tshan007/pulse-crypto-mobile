@@ -7,8 +7,7 @@ interface PressureBarProps {
   sellPressure: number | null;
 }
 
-// Same per-instance Animated.Value approach as FlashingPrice — a single
-// tween on this component's own value, not a shared/global driver.
+// Same per-instance Animated.Value approach as FlashingPrice.
 export const PressureBar = React.memo(function PressureBar({ buyPressure, sellPressure }: PressureBarProps) {
   const buy = buyPressure ?? 50;
   const sell = sellPressure ?? 50;

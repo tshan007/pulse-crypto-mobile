@@ -1,12 +1,7 @@
 import { config } from "../config";
 import { ClientMessage, PairState, ServerMessage } from "../types/market";
 
-/**
- * Compact, human-scannable log lines for WS traffic — deliberately not a
- * full JSON.stringify of every payload, since at a 100ms broadcast interval
- * that would scroll the terminal unreadably fast. Enable via
- * EXPO_PUBLIC_DEBUG_WS=true.
- */
+/** Compact log lines for WS traffic — not a full JSON.stringify, too noisy at a 100ms interval. Enable via EXPO_PUBLIC_DEBUG_WS=true. */
 export const wsDebug = {
   open(url: string) {
     if (!config.debugWs) return;
@@ -19,8 +14,7 @@ export const wsDebug = {
   },
 
   error(message: string) {
-    // Errors are always logged, debug flag or not — they're rare and
-    // actionable, not noise.
+    // Always logged, debug flag or not — rare and actionable.
     console.warn(`[ws] ✕ error: ${message}`);
   },
 

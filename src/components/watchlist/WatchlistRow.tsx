@@ -11,23 +11,12 @@ interface WatchlistRowProps {
   onPress: (pair: string) => void;
 }
 
-/**
- * Each row subscribes only to its own pair's slice of the store (and its
- * own favorite flag). A price tick for BTC updates `pairs.BTCUSDT`'s
- * object reference in the store; Zustand's selector equality check means
- * only the row selecting `pairs.BTCUSDT` re-renders — every other row's
- * selector returns the same reference as before and skips re-render
- * entirely. This is what keeps a 5-100ms tick rate cheap regardless of how
- * many rows are on screen.
- */
+/** Subscribes only to this pair's store slice, so a BTC tick doesn't re-render other rows. */
 export const WatchlistRow = React.memo(function WatchlistRow({ pair, onPress }: WatchlistRowProps) {
   const pairState = useMarketStore((s) => s.pairs[pair]);
   const isFavorite = useMarketStore((s) => Boolean(s.favorites[pair]));
   const toggleFavorite = useMarketStore((s) => s.toggleFavorite);
-  // pairState.connected is the backend's last-reported per-pair status —
-  // it only updates on an incoming snapshot, so it goes stale once our own
-  // socket drops. Gate it on socketStatus too so the dot flips to offline
-  // immediately on error/close instead of showing the last good value.
+  // Also gate on socketStatus — pairState.connected only updates on a snapshot, so it goes stale once our socket drops.
   const socketStatus = useMarketStore((s) => s.socketStatus);
 
   const handlePress = useCallback(() => onPress(pair), [onPress, pair]);

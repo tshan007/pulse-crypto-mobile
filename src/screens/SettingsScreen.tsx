@@ -25,9 +25,7 @@ export function SettingsScreen() {
   const adaptivePolling = useTelemetryStore((s) => s.adaptivePolling);
   const setAdaptivePolling = useTelemetryStore((s) => s.setAdaptivePolling);
 
-  // Actual cadence in effect right now: the manual slider value, or — when
-  // adaptive polling is on — a value computed from live FPS/foreground
-  // state. useMarketSocket sends this same computation to the backend.
+  // Actual cadence right now: manual slider, or computed live if adaptive polling is on.
   const effectiveIntervalMs = adaptivePolling
     ? computeAdaptiveIntervalMs(fps, appState)
     : updateIntervalMs;

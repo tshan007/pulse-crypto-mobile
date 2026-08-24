@@ -1,6 +1,7 @@
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { PairMeta, PairState } from "../../types/market";
+import { useMarketStore } from "../../store/marketStore";
 import { theme } from "../../theme";
 import { FlashingPrice } from "../common/FlashingPrice";
 import { OrderBookTable } from "./OrderBookTable";
@@ -15,7 +16,9 @@ interface DetailContentProps {
 }
 
 export function DetailContent({ pairState, meta }: DetailContentProps) {
-  const { price, spread, buyPressure, sellPressure, bids, asks, connected, timestamp } = pairState;
+  const { price, spread, buyPressure, sellPressure, bids, asks, connected: pairConnected, timestamp } = pairState;
+  const socketStatus = useMarketStore((s) => s.socketStatus);
+  const connected = socketStatus === "open" && pairConnected;
 
   return (
     <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>

@@ -1,6 +1,6 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import { FlashList } from "@shopify/flash-list";
+import { FlashList, FlashListRef } from "@shopify/flash-list";
 import { SafeAreaView } from "react-native-safe-area-context";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { WatchlistRow } from "../components/watchlist/WatchlistRow";
@@ -21,6 +21,11 @@ export function WatchlistScreen({ navigation }: Props) {
   const supportedPairs = useMarketStore((s) => s.supportedPairs);
   const { refreshing, refresh } = usePairsMeta();
   usePairScope("all");
+
+  const listRef = useRef<FlashListRef<string>>(null);
+  useEffect(() => {
+    listRef.current?.scrollToOffset({ offset: 0, animated: false });
+  }, []);
 
   const filteredPairs = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -61,14 +66,13 @@ export function WatchlistScreen({ navigation }: Props) {
       />
 
       <FlashList<string>
+        ref={listRef}
         data={filteredPairs}
         keyExtractor={(item) => item}
         renderItem={({ item }) => <WatchlistRow pair={item} onPress={handleOpenDetail} />}
         refreshing={refreshing}
         onRefresh={refresh}
-        // Default (250dp) leaves too little pre-rendered buffer for a fast
-        // scroll to stay ahead of — doubling it trades a bit more upfront
-        // render work for fewer blank cells while scrolling.
+        // Doubled from the 250dp default to cut blank cells on fast scrolls.
         drawDistance={500}
         ListEmptyComponent={<Text style={styles.empty}>No pairs match "{query}"</Text>}
       />

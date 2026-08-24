@@ -91,7 +91,7 @@ export function TelemetryScreen() {
           iconBackground={theme.palette.neutral[800]}
           iconColor={theme.colors.textSecondary}
           title="Storage cache"
-          subtitle="AsyncStorage — favourites only, ~1KB used"
+          subtitle="AsyncStorage — favorites only, ~1KB used"
         />
       </ScrollView>
     </SafeAreaView>

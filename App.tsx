@@ -4,7 +4,7 @@ import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { RootTabNavigator } from "./src/navigation/RootTabNavigator";
 import { useMarketSocket } from "./src/hooks/useMarketSocket";
-import { useFavouritesHydration } from "./src/hooks/useFavouritesHydration";
+import { useFavoritesHydration } from "./src/hooks/useFavoritesHydration";
 import { usePairs } from "./src/hooks/usePairs";
 
 const navTheme = {
@@ -21,8 +21,8 @@ const navTheme = {
 export default function App() {
   // Single WebSocket connection for the whole app lifetime.
   useMarketSocket();
-  // Restore favourites from disk on cold start.
-  useFavouritesHydration();
+  // Restore favorites from disk on cold start.
+  useFavoritesHydration();
   // Fetch the supported pair list from the backend on cold start.
   usePairs();
 

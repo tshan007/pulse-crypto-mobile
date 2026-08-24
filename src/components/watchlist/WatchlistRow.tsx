@@ -13,7 +13,7 @@ interface WatchlistRowProps {
 
 /**
  * Each row subscribes only to its own pair's slice of the store (and its
- * own favourite flag). A price tick for BTC updates `pairs.BTCUSDT`'s
+ * own favorite flag). A price tick for BTC updates `pairs.BTCUSDT`'s
  * object reference in the store; Zustand's selector equality check means
  * only the row selecting `pairs.BTCUSDT` re-renders — every other row's
  * selector returns the same reference as before and skips re-render
@@ -22,8 +22,8 @@ interface WatchlistRowProps {
  */
 export const WatchlistRow = React.memo(function WatchlistRow({ pair, onPress }: WatchlistRowProps) {
   const pairState = useMarketStore((s) => s.pairs[pair]);
-  const isFavourite = useMarketStore((s) => Boolean(s.favourites[pair]));
-  const toggleFavourite = useMarketStore((s) => s.toggleFavourite);
+  const isFavorite = useMarketStore((s) => Boolean(s.favorites[pair]));
+  const toggleFavorite = useMarketStore((s) => s.toggleFavorite);
   // pairState.connected is the backend's last-reported per-pair status —
   // it only updates on an incoming snapshot, so it goes stale once our own
   // socket drops. Gate it on socketStatus too so the dot flips to offline
@@ -31,7 +31,7 @@ export const WatchlistRow = React.memo(function WatchlistRow({ pair, onPress }: 
   const socketStatus = useMarketStore((s) => s.socketStatus);
 
   const handlePress = useCallback(() => onPress(pair), [onPress, pair]);
-  const handleToggleFavourite = useCallback(() => toggleFavourite(pair), [toggleFavourite, pair]);
+  const handleToggleFavorite = useCallback(() => toggleFavorite(pair), [toggleFavorite, pair]);
 
   const price = pairState?.price ?? null;
   const change24h = pairState?.change24h ?? null;
@@ -41,8 +41,8 @@ export const WatchlistRow = React.memo(function WatchlistRow({ pair, onPress }: 
 
   return (
     <Pressable onPress={handlePress} style={styles.row}>
-      <Pressable onPress={handleToggleFavourite} hitSlop={10} style={styles.star}>
-        <Text style={isFavourite ? styles.starActive : styles.starInactive}>{isFavourite ? "★" : "☆"}</Text>
+      <Pressable onPress={handleToggleFavorite} hitSlop={10} style={styles.star}>
+        <Text style={isFavorite ? styles.starActive : styles.starInactive}>{isFavorite ? "★" : "☆"}</Text>
       </Pressable>
 
       <View style={styles.pairColumn}>
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   starActive: {
-    color: theme.colors.favourite,
+    color: theme.colors.favorite,
     fontSize: 18,
   },
   starInactive: {

@@ -57,7 +57,7 @@ export const colors = {
   successBright: "#4ade80",
   danger: "#ef4444",
   dangerBright: "#f87171",
-  favourite: "#facc15",
+  favorite: "#facc15",
 
   successWash: "rgba(34,197,94,0.15)",
   successOverlay: "rgba(34, 197, 94, 0.43)",

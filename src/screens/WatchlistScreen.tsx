@@ -16,7 +16,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "Watchlist">;
 
 export function WatchlistScreen({ navigation }: Props) {
   const [query, setQuery] = useState("");
-  const favourites = useMarketStore((s) => s.favourites);
+  const favorites = useMarketStore((s) => s.favorites);
   const socketStatus = useMarketStore((s) => s.socketStatus);
   const supportedPairs = useMarketStore((s) => s.supportedPairs);
   const { refreshing, refresh } = usePairsMeta();
@@ -30,13 +30,13 @@ export function WatchlistScreen({ navigation }: Props) {
         )
       : supportedPairs;
 
-    // Favourites first, stable order otherwise.
+    // Favorites first, stable order otherwise.
     return [...matches].sort((a, b) => {
-      const favA = favourites[a] ? 1 : 0;
-      const favB = favourites[b] ? 1 : 0;
+      const favA = favorites[a] ? 1 : 0;
+      const favB = favorites[b] ? 1 : 0;
       return favB - favA;
     });
-  }, [query, favourites, supportedPairs]);
+  }, [query, favorites, supportedPairs]);
 
   const handleOpenDetail = useCallback(
     (pair: string) => navigation.navigate("Detail", { pair }),

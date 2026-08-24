@@ -1,14 +1,14 @@
 import { create } from "zustand";
 import { PairMeta, PairState, SocketStatus } from "../types/market";
-import { saveFavourites } from "./favouritesStorage";
+import { saveFavorites } from "./favoritesStorage";
 import { SUPPORTED_PAIRS } from "../constants";
 
 interface MarketStoreState {
   pairs: Record<string, PairState>;
   meta: Record<string, PairMeta>;
   socketStatus: SocketStatus;
-  favourites: Record<string, true>;
-  favouritesHydrated: boolean;
+  favorites: Record<string, true>;
+  favoritesHydrated: boolean;
   // Known pair symbols, e.g. "BTCUSDT". Seeded from the SUPPORTED_PAIRS
   // fallback so the watchlist has something to render on cold start, then
   // replaced with the backend's actual set once GET /pairs resolves.
@@ -18,8 +18,8 @@ interface MarketStoreState {
   setSocketStatus: (status: SocketStatus) => void;
   setMeta: (meta: PairMeta[]) => void;
   setSupportedPairs: (pairs: string[]) => void;
-  toggleFavourite: (pair: string) => void;
-  hydrateFavourites: (pairs: string[]) => void;
+  toggleFavorite: (pair: string) => void;
+  hydrateFavorites: (pairs: string[]) => void;
 }
 
 /**
@@ -37,8 +37,8 @@ export const useMarketStore = create<MarketStoreState>((set, get) => ({
   pairs: {},
   meta: {},
   socketStatus: "connecting",
-  favourites: {},
-  favouritesHydrated: false,
+  favorites: {},
+  favoritesHydrated: false,
   supportedPairs: SUPPORTED_PAIRS,
 
   applySnapshot: (data) => {
@@ -78,20 +78,20 @@ export const useMarketStore = create<MarketStoreState>((set, get) => ({
 
   setSupportedPairs: (pairs) => set({ supportedPairs: pairs }),
 
-  toggleFavourite: (pair) => {
-    const favourites = { ...get().favourites };
-    if (favourites[pair]) {
-      delete favourites[pair];
+  toggleFavorite: (pair) => {
+    const favorites = { ...get().favorites };
+    if (favorites[pair]) {
+      delete favorites[pair];
     } else {
-      favourites[pair] = true;
+      favorites[pair] = true;
     }
-    set({ favourites });
-    saveFavourites(Object.keys(favourites));
+    set({ favorites });
+    saveFavorites(Object.keys(favorites));
   },
 
-  hydrateFavourites: (pairs) => {
-    const favourites: Record<string, true> = {};
-    for (const p of pairs) favourites[p] = true;
-    set({ favourites, favouritesHydrated: true });
+  hydrateFavorites: (pairs) => {
+    const favorites: Record<string, true> = {};
+    for (const p of pairs) favorites[p] = true;
+    set({ favorites, favoritesHydrated: true });
   },
 }));

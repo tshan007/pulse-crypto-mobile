@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 import { useMarketStore } from "../store/marketStore";
-import { loadFavourites } from "../store/favouritesStorage";
+import { loadFavorites } from "../store/favoritesStorage";
 
-export function useFavouritesHydration() {
-  const hydrateFavourites = useMarketStore((s) => s.hydrateFavourites);
+export function useFavoritesHydration() {
+  const hydrateFavorites = useMarketStore((s) => s.hydrateFavorites);
 
   useEffect(() => {
     let cancelled = false;
-    loadFavourites().then((pairs) => {
-      if (!cancelled) hydrateFavourites(pairs);
+    loadFavorites().then((pairs) => {
+      if (!cancelled) hydrateFavorites(pairs);
     });
     return () => {
       cancelled = true;
